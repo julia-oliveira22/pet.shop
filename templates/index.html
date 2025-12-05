@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Pet Shop - Sistema Web</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<h1>Sistema de Cadastro de Pets</h1>
+
+<div class="container">
+
+    <!-- FORMULÁRIO DE CADASTRO -->
+    <section class="card">
+        <h2>Cadastrar Pet</h2>
+
+        <form action="/cadastrar" method="POST">
+            <label>Nome do Pet:</label>
+            <input type="text" name="nome_pet" required>
+
+            <label>Nome do Dono:</label>
+            <input type="text" name="nome_dono" required>
+
+            <label>Telefone:</label>
+            <input type="text" name="telefone" required>
+
+            <label>Email:</label>
+            <input type="email" name="email" required>
+
+            <label>Serviços:</label>
+            <div class="servicos">
+                {% for s, preco in precos.items() %}
+                    <div>
+                        <input type="checkbox" name="servicos" value="{{ s }}">
+                        {{ s }} (R$ {{ "%.2f"|format(preco) }})
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn-green">Cadastrar</button>
+        </form>
+    </section>
+
+    <!-- BUSCA -->
+    <section class="card">
+        <h2>Buscar Pets</h2>
+
+        <form action="/buscar" method="POST">
+            <input type="text" name="busca_dono" placeholder="Nome do dono">
+            <input type="text" name="busca_pet" placeholder="Nome do pet">
+
+            <select name="busca_servico">
+                <option value="">Serviço</option>
+                {% for s in precos.keys() %}
+                    <option value="{{ s }}">{{ s }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn-blue">Buscar</button>
+        </form>
+    </section>
+
+    <!-- RESULTADOS -->
+    <section class="card">
+        <h2>Resultados</h2>
+
+        {% if not animais %}
+            <p>Nenhum pet cadastrado.</p>
+        {% else %}
+            {% for a in animais %}
+                <div class="resultado">
+                    <strong>Pet:</strong> {{ a.nome_pet }} <br>
+                    <strong>Dono:</strong> {{ a.nome_dono }} <br>
+                    <strong>Telefone:</strong> {{ a.telefone }} <br>
+                    <strong>Email:</strong> {{ a.email }} <br>
+                    <strong>Serviços:</strong> {{ ", ".join(a.servicos) }} <br>
+                    <strong>Preço Total:</strong> R$ {{ "%.2f"|format(a.preco) }}
+                    <hr>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+</div>
+
+<footer>Desenvolvido por Você © 2025</footer>
+
+</body>
+</html>
